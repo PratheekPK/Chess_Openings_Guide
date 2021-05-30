@@ -1,6 +1,13 @@
 import re
 import pandas as pd
 
+file = open(r"/Users/jon/PycharmProjects/Chess/test_game.txt")
+lines = file.readlines()
+count = 0
+for line in lines:
+    print(f"{count } {line}")
+    count +=1
+file.close()
 
 test_game ="""
 [Event "Rated Bullet game"]
@@ -22,12 +29,61 @@ test_game ="""
 """
 
 def get_quote(line: str):
-    value = re.findall('"([^"]*)"', line)
+    return re.findall('"([^"]*)"', line)
 
+def get_moves(moves: str):
+    movelist = moves.split(' ')
+    white_move_list = []
+    black_move_list = []
+
+    count = 0
+    for move in movelist:
+        if count == 1:
+            white_move_list.append(move)
+        elif count == 2:
+            black_move_list.append(move)
+
+        count += 1
+        if count == 3:
+            count = 0
+    print(white_move_list)
+    print(black_move_list)
 
 def get_info(game : str):
     game_info = game.splitlines()
     event = get_quote(game_info[1])
-    print(event)
+    Site  = get_quote(game_info[2])
+    White = get_quote(game_info[3])
+    Black = get_quote(game_info[4])
+    Result = get_quote(game_info[5])
+    UTCDate = get_quote(game_info[6])
+    UTCTime = get_quote(game_info[7])
+    WhiteElo = get_quote(game_info[8])
+    BlackElo = get_quote(game_info[9])
+    WhiteRatingDiff = get_quote(game_info[10])
+    BlackRatingDiff = get_quote(game_info[11])
+    ECO = get_quote(game_info[12])
+    Opening = get_quote(game_info[13])
+    InitialTime = get_quote(game_info[14]).split('+')[0]
+    Increment = get_quote(game_info[14]).split('+')[1]
+    Termination = get_quote(game_info[15])
 
-get_info(test_game)
+
+    print(event)
+    print(Site)
+    print(White)
+    print(Black)
+    print(Result)
+    print(UTCDate)
+    print(UTCTime)
+    print(WhiteElo)
+    print(BlackElo)
+    print(WhiteRatingDiff)
+    print(BlackRatingDiff)
+    print(ECO)
+    print(Opening)
+    print(InitialTime)
+    print(Increment)
+    print(Termination)
+
+
