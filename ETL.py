@@ -1,32 +1,80 @@
 import re
 import pandas as pd
 
-file = open(r"/Users/jon/PycharmProjects/Chess/test_game.txt")
-lines = file.readlines()
-count = 0
-for line in lines:
-    print(f"{count } {line}")
-    count +=1
-file.close()
+class game_data:
+    
+    def __init__(self, game_string):
+        self.game_string = game_string
+        self.game_info = game_string.splitlines()
+        self.event = get_quote(self.game_info[2])
+        self.Site  = get_quote(self.game_info[4])
+        self.White = get_quote(self.game_info[10])
+        self.Black = get_quote(self.game_info[12])
+        self.Result = get_quote(self.game_info[14])
+        self.UTCDate = get_quote(self.game_info[6])
+# =============================================================================
+#         self.UTCTime = get_quote(self.game_info[7])
+# =============================================================================
+        self.WhiteElo = get_quote(self.game_info[16])
+        self.BlackElo = get_quote(self.game_info[18])
+# =============================================================================
+#         self.WhiteRatingDiff = get_quote(self.game_info[10])
+#         self.BlackRatingDiff = get_quote(self.game_info[11])
+# =============================================================================
+        self.ECO = get_quote(self.game_info[20])
+# =============================================================================
+#         self.Opening = get_quote(self.game_info[13])
+# =============================================================================
+        
+# =============================================================================
+#         self.InitialTime = str(get_quote(self.game_info[14])).split('+')[0]
+#         self.Increment = str(get_quote(self.game_info[14])).split('+')[1]
+#         
+# =============================================================================
+# =============================================================================
+#         self.Termination = get_quote(self.game_info[15])
+# =============================================================================
+        
+    
+    def get_info(self):
+        
+        print(self.event)
+        print(self.Site)
+        print(self.White)
+        print(self.Black)
+        print(self.Result)
+        print(self.UTCDate)
+        print(self.UTCTime)
+        print(self.WhiteElo)
+        print(self.BlackElo)
+        print(self.WhiteRatingDiff)
+        print(self.BlackRatingDiff)
+        print(self.ECO)
+        print(self.Opening)
+        print(self.InitialTime)
+        print(self.Increment)
+        print(self.Termination)
 
-test_game ="""
-[Event "Rated Bullet game"]
-[Site "https://lichess.org/yd5d4l9a"]
-[White "claudiomat"]
-[Black "MisterBiggStuff"]
-[Result "0-1"]
-[UTCDate "2013.12.31"]
-[UTCTime "23:00:14"]
-[WhiteElo "1711"]
-[BlackElo "2035"]
-[WhiteRatingDiff "-4"]
-[BlackRatingDiff "+3"]
-[ECO "A43"]
-[Opening "Old Benoni Defense"]
-[TimeControl "60+0"]
-[Termination "Time forfeit"]	
-1. d4 c5 2. e3 cxd4 3. exd4 d5 4. c3 Nc6 5. f4 e5 6. Nf3 e4 7. Ne5 f6 8. Qh5+ g6 9. Nxg6 hxg6 10. Qxh8 Kf7 11. Qh7+ Bg7 12. f5 g5 13. h4 gxh4 14. Bh6 Qf8 15. Rxh4 Nxh6 16. Rxh6 Ne7 17. Rh3 Bxf5 18. Qh4 Bxh3 19. Qxh3 Qh8 20. Qd7 Qh4+ 21. Kd2 Bh6+ 22. Kc2 Qf2+ 23. Nd2 Qxd2+ 24. Kb3 e3 0-1
-"""
+def extraction():
+    file = open(r"C:\Users\hp\Code\GitHub\Chess_Openings_Guide\carlsen.txt")
+    lines = file.readlines()
+    count = 0
+    blank_line_count=0
+    games_strings=["" for i in range(0,len(lines))]
+    for i in range(0,len(lines)):
+        if (len(lines[i])==1):
+            blank_line_count+=1
+        if((blank_line_count%2)==1):
+            games_strings[blank_line_count//2]=games_strings[blank_line_count//2]+lines[i]
+        else:
+            games_strings[blank_line_count//2]=games_strings[blank_line_count//2]+lines[i]+'\n'
+            
+    while("" in games_strings):
+        games_strings.remove("")
+        
+    file.close()
+    return games_strings
+    
 
 def get_quote(line: str):
     return re.findall('"([^"]*)"', line)
@@ -49,41 +97,13 @@ def get_moves(moves: str):
     print(white_move_list)
     print(black_move_list)
 
-def get_info(game : str):
-    game_info = game.splitlines()
-    event = get_quote(game_info[1])
-    Site  = get_quote(game_info[2])
-    White = get_quote(game_info[3])
-    Black = get_quote(game_info[4])
-    Result = get_quote(game_info[5])
-    UTCDate = get_quote(game_info[6])
-    UTCTime = get_quote(game_info[7])
-    WhiteElo = get_quote(game_info[8])
-    BlackElo = get_quote(game_info[9])
-    WhiteRatingDiff = get_quote(game_info[10])
-    BlackRatingDiff = get_quote(game_info[11])
-    ECO = get_quote(game_info[12])
-    Opening = get_quote(game_info[13])
-    InitialTime = get_quote(game_info[14]).split('+')[0]
-    Increment = get_quote(game_info[14]).split('+')[1]
-    Termination = get_quote(game_info[15])
 
-
-    print(event)
-    print(Site)
-    print(White)
-    print(Black)
-    print(Result)
-    print(UTCDate)
-    print(UTCTime)
-    print(WhiteElo)
-    print(BlackElo)
-    print(WhiteRatingDiff)
-    print(BlackRatingDiff)
-    print(ECO)
-    print(Opening)
-    print(InitialTime)
-    print(Increment)
-    print(Termination)
-
-
+if __name__=='__main__':
+    
+    main_games_strings=extraction()
+    game_objects = []
+    main_games_strings[0]="\n\n"+main_games_strings[0]
+    for strings in main_games_strings:
+        if ((len(strings))>2):
+            game_objects.append(game_data(strings))
+    
